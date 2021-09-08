@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - "./docker/db/pgdata:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "e-commerce"
+
+  # nginx:
+  #   build: ./nginx
+  #   container_name: docker-pyhton-django-nginx-prd
+  #   volumes:
+  #     - ./media:/usr/src/app/media
+  #     - ./static:/usr/src/app/static
+  #   ports:
+  #     - "9100:80"
+      
