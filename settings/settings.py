@@ -93,7 +93,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'settings.wsgi.application'
-
+AUTH_USER_MODEL = 'accounts.User'
 # All Auth
 AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -102,6 +102,13 @@ AUTHENTICATION_BACKENDS = [
 # Django Admin Interface
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SILENCED_SYSTEM_CHECKS = ['security.W019']
+
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
