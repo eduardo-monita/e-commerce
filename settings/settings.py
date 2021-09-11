@@ -33,12 +33,34 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
+    'colorfield',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # Rest Framework
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    # Rest Auth / All Auth
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+
+    # Aplications
+    'about_us.apps.AboutUsConfig',
+    'accounts.apps.AccountsConfig',
+    'catalogs.apps.CatalogsConfig',
+    'managements.apps.ManagementsConfig',
+    'posts.apps.PostsConfig',
+    'products.apps.ProductsConfig',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -71,6 +94,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'settings.wsgi.application'
 
+# All Auth
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Django Admin Interface
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SILENCED_SYSTEM_CHECKS = ['security.W019']
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -166,10 +197,38 @@ LOGGING = {
             'handlers': ['console', ],
             'propagate': False,
         },
-        # 'class_active_campaign': {
-        #     'level': 'DEBUG' if DEBUG else 'INFO',
-        #     'handlers': ['console', ],
-        #     'propagate': False,
-        # },
+        'about_us': {
+            'level': 'DEBUG',
+            'handlers': ['console', ],
+            'propagate': False,
+        },
+        'accounts': {
+            'level': 'DEBUG',
+            'handlers': ['console', ],
+            'propagate': False,
+        },
+        'catalogs': {
+            'level': 'DEBUG',
+            'handlers': ['console', ],
+            'propagate': False,
+        },
+        'managements': {
+            'level': 'DEBUG',
+            'handlers': ['console', ],
+            'propagate': False,
+        },
+        'posts': {
+            'level': 'DEBUG',
+            'handlers': ['console', ],
+            'propagate': False,
+        },
+        'products': {
+            'level': 'DEBUG',
+            'handlers': ['console', ],
+            'propagate': False,
+        },
     },
 }
+
+# Variables
+SITE_ID = 1
