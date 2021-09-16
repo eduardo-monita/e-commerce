@@ -94,10 +94,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'settings.wsgi.application'
 AUTH_USER_MODEL = 'accounts.User'
-# All Auth
-AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
+# # All Auth
+# AUTHENTICATION_BACKENDS = [
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# ]
 
 # Django Admin Interface
 X_FRAME_OPTIONS = 'SAMEORIGIN'

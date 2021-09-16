@@ -4,6 +4,7 @@ from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from accounts.managers import UserManager
@@ -13,11 +14,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=30, blank=True)
-    date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
-    is_staff = models.BooleanField(default=False)
+    phone = models.CharField(_('phone'), max_length=50)
+    date_of_birth = models.DateField(_('date of birth'), blank=True, null=True)
+    picture = models.ImageField(_('picture'), upload_to='picture/', null=True, blank=True)
     is_active = models.BooleanField(_('active'), default=True)
-    is_admin = models.BooleanField(default=False)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    is_staff = models.BooleanField(_('staff status'), default=False)
+    is_superuser = models.BooleanField(_('superuser status'), default=False)
+    last_login = models.DateTimeField(_('last login'), null=True)
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = UserManager()
 
@@ -49,13 +53,3 @@ class User(AbstractBaseUser, PermissionsMixin):
         Sends an email to this User.
         '''
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        return self.staff
-
-    @property
-    def is_admin(self):
-        "Is the user a admin member?"
-        return self.admin
