@@ -19,18 +19,22 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import RedirectView
-
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
 admin.autodiscover()
 admin.site.enable_nav_sidebar = False
 
 urlpatterns = [
     # path('', RedirectView.as_view(url='/admin')),
     url(r'^admin/', admin.site.urls),
-    # url(r'^', include('example_app.urls')),
-    # url(r'^rest-auth/', include('rest_auth.urls')),
-    # url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
-    # path('accounts/', include('allauth.urls')),
-    path('api-auth/', include('rest_framework.urls'))
+    path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+
+    # Applications
+    # url(r'^', include('about_us.urls')),
+    url(r'^', include('accounts.urls')),
+    # url(r'^', include('catalogs.urls')),
+    # url(r'^', include('managements.urls')),
+    # url(r'^', include('posts.urls')),
+    # url(r'^', include('products.urls')),
 ]
 
 if settings.DEBUG:
