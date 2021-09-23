@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
 from .forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
 
 
+@admin.register(User)
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
@@ -29,6 +29,3 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('email', 'first_name', 'last_name', 'phone')
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions',)
-
-
-admin.site.register(User, UserAdmin)

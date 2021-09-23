@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -52,10 +53,18 @@ class UserChangeForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'phone', 'date_of_birth',
-                  'picture', 'password', 'is_active', 'is_superuser')
+                  'picture', 'password', 'is_active', 'is_staff', 'is_superuser')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password'].help_text = (
+            "Raw passwords are not stored, so there is no way to see "
+            "this user's password, but you can <a href=\"%s\"> "
+            "<strong>Change the Password</strong> using this form</a>."
+        ) % reverse('admin:auth_user_password_change', args=[self.instance.id])
