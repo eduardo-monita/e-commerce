@@ -1,113 +1,137 @@
 from django.db import models
-from helpers.models import TimestampModel
 from django.utils.translation import ugettext_lazy as _
+from helpers.models import TimestampModel
+
 
 # Create your models here.
-
 class Category(TimestampModel):
     name = models.CharField(
+        verbose_name=_("Name"),
         max_length=255,
-        help_text=_("Category Name.")
+        db_index=True
     )
-
     image = models.ImageField(
-        upload_to="products/category",
-        help_text=_("Category Image.")
+        verbose_name=_("Image"),
+        upload_to="products/category"
     )
-
     alt_image = models.CharField(
+        verbose_name=_("Alt image"),
         max_length=255,
-        help_text=_("Category Image Description.")
+        blank=True,
+        null=True,
+        help_text=_("The text that represents the image.")
     )
 
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
 
-
-class Access(TimestampModel):
-    hit = models.IntegerField(
-        help_text=_("Hit.")
-    )
-
-    class Meta:
-        verbose_name = _("Access")
-        verbose_name_plural = _("Accesses")
-
-
-class Sale(TimestampModel):
-    hit = models.IntegerField(
-        help_text=_("Hit.")
-    )
-
-    class Meta:
-        verbose_name = _("Sale")
-        verbose_name_plural = _("Sales")
-
+    def __str__(self) -> str:
+        return self.name
 
 
 class Product(TimestampModel):
     name = models.CharField(
+        verbose_name=_("Name"),
         max_length=255,
-        help_text=_("Product Name.")
+        db_index=True
     )
-
-    description = models.CharField(
-        max_length=255,
-        help_text=_("Product Description.")
+    description = models.TextField(
+        verbose_name=_("Description")
     )
-
     price = models.DecimalField(
-        help_text=_("Product Price.")
+        verbose_name=_("Price"),
+        max_digits=9,
+        decimal_places=2
     )
-
     image = models.ImageField(
-        upload_to="products/product",
-        help_text=_("Product Image.")
+        verbose_name=_("Image"),
+        upload_to="products/product"
     )
-
     alt_image = models.CharField(
+        verbose_name=_("Alt image"),
         max_length=255,
-        help_text=_("Product Image Description.")
+        blank=True,
+        null=True,
+        help_text=_("The text that represents the image.")
     )
-
     categories = models.ManyToManyField(
-        Category,
-        help_text=_("Product categories.")
-    )
-
-    acecesses = models.ManyToManyField(
-        Access,
-        help_text=_("Product Accesses.")
-    )
-
-    sales = models.ManyToManyField(
-        Sale,
-        help_text=_("Product Sales.")
+        verbose_name=_("Categories"),
+        to=Category,
+        related_name='products'
     )
 
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
 
+    def __str__(self) -> str:
+        return self.name
+
+
+class Access(TimestampModel):
+    product = models.OneToOneField(
+        verbose_name=_("Product"),
+        to=Product,
+        related_name="access",
+        on_delete=models.PROTECT
+    )
+    hit = models.PositiveIntegerField(
+        verbose_name=_("Hit"),
+        default=0,
+        help_text=_("Number of access.")
+    )
+
+    class Meta:
+        verbose_name = _("Access")
+        verbose_name_plural = _("Accesses")
+
+    def __str__(self) -> str:
+        return f'{self.product.name} - {self.hit}'
+
+
+class Sale(TimestampModel):
+    product = models.OneToOneField(
+        verbose_name=_("Product"),
+        to=Product,
+        related_name="sale",
+        on_delete=models.PROTECT
+    )
+    hit = models.PositiveIntegerField(
+        verbose_name=_("Hit"),
+        default=0,
+        help_text=_("Number of sales.")
+    )
+
+    class Meta:
+        verbose_name = _("Sale")
+        verbose_name_plural = _("Sales")
+
+    def __str__(self) -> str:
+        return f'{self.product.name} - {self.hit}'
 
 
 class Characteristic(TimestampModel):
     name = models.CharField(
+        verbose_name=_("Name"),
         max_length=255,
-        help_text=_("Characteristic Name.")
+        help_text=_("Ex: Color, widht, volts ...")
     )
-
     description = models.CharField(
-        max_length=255,
-        help_text=_("Characteristic Description.")
+        verbose_name=_("Description"),
+        max_length=510,
+        help_text=_("Description related to name of characteristic.")
     )
-
-    product = models.ManyToManyField(
-        Product,
-        help_text=_("Characteristic Associate Product.")
+    product = models.ForeignKey(
+        verbose_name=_("Product"),
+        to=Product,
+        related_name=_("characteristics"),
+        on_delete=models.PROTECT
     )
 
     class Meta:
         verbose_name = _("Characteristic")
         verbose_name_plural = _("Characteristics")
+
+    def __str__(self) -> str:
+        return self.name

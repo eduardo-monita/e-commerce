@@ -1,8 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .forms import UserChangeForm, UserCreationForm
-
+from accounts.forms import UserChangeForm, UserCreationForm
+from accounts.models import (
+    Cart,
+    ProductCart,
+    ProductFavorite,
+    ProductShopped,
+    ProductAccessed
+)
 User = get_user_model()
 
 
@@ -19,6 +25,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        ('Favorite', {'fields'})
     )
     add_fieldsets = (
         (None, {
