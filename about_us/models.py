@@ -39,6 +39,8 @@ class Company(TimestampModel):
     )
     cnpj = models.CharField(
         verbose_name=_("CNPJ"),
+        unique=True,
+        db_index=True,
         max_length=255
     )
     motivation = models.TextField(
@@ -49,7 +51,7 @@ class Company(TimestampModel):
         help_text=_("Why did you start the company? And why do you keep working on it every day?")
     )
     principles = models.TextField(
-        verbose_name=_("Description"),
+        verbose_name=_("Principles"),
         max_length=255,
         blank=True,
         null=True,

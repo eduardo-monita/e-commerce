@@ -44,6 +44,13 @@ class Product(TimestampModel):
         max_digits=9,
         decimal_places=2
     )
+    freight = models.DecimalField(
+        verbose_name=_("Freight"),
+        max_digits=9,
+        decimal_places=2,
+        default=0,
+        help_text=_("Cost of freight.")
+    )
     image = models.ImageField(
         verbose_name=_("Image"),
         upload_to="products/product"
@@ -58,7 +65,7 @@ class Product(TimestampModel):
     categories = models.ManyToManyField(
         verbose_name=_("Categories"),
         to=Category,
-        related_name='products'
+        related_name="products"
     )
 
     class Meta:
@@ -74,7 +81,7 @@ class Access(TimestampModel):
         verbose_name=_("Product"),
         to=Product,
         related_name="access",
-        on_delete=models.PROTECT
+        on_delete=models.CASCADE
     )
     hit = models.PositiveIntegerField(
         verbose_name=_("Hit"),
@@ -87,7 +94,7 @@ class Access(TimestampModel):
         verbose_name_plural = _("Accesses")
 
     def __str__(self) -> str:
-        return f'{self.product.name} - {self.hit}'
+        return f"{self.product.name} - {self.hit}"
 
 
 class Sale(TimestampModel):
@@ -95,7 +102,7 @@ class Sale(TimestampModel):
         verbose_name=_("Product"),
         to=Product,
         related_name="sale",
-        on_delete=models.PROTECT
+        on_delete=models.CASCADE
     )
     hit = models.PositiveIntegerField(
         verbose_name=_("Hit"),
@@ -108,25 +115,24 @@ class Sale(TimestampModel):
         verbose_name_plural = _("Sales")
 
     def __str__(self) -> str:
-        return f'{self.product.name} - {self.hit}'
+        return f"{self.product.name} - {self.hit}"
 
 
 class Characteristic(TimestampModel):
+    product = models.ForeignKey(
+        verbose_name=_("Product"),
+        to=Product,
+        related_name=_("characteristics"),
+        on_delete=models.CASCADE
+    )
     name = models.CharField(
         verbose_name=_("Name"),
         max_length=255,
         help_text=_("Ex: Color, widht, volts ...")
     )
-    description = models.CharField(
+    description = models.TextField(
         verbose_name=_("Description"),
-        max_length=510,
         help_text=_("Description related to name of characteristic.")
-    )
-    product = models.ForeignKey(
-        verbose_name=_("Product"),
-        to=Product,
-        related_name=_("characteristics"),
-        on_delete=models.PROTECT
     )
 
     class Meta:

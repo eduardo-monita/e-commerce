@@ -6,33 +6,6 @@ from products.models import Category
 
 
 # Create your models here.
-class Promotion(TimestampModel):
-    link = models.URLField(
-        verbose_name=_("Link"),
-        max_length=255,
-        db_index=True,
-        help_text=_("Link to Promotion.")
-    )
-    image = models.ImageField(
-        verbose_name=_("Image"),
-        upload_to="managements/promotion"
-    )
-    alt_image = models.CharField(
-        verbose_name=_("Alt image"),
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text=_("The text that represents the image.")
-    )
-
-    class Meta:
-        verbose_name = _("Promotion")
-        verbose_name_plural = _("Promotions")
-
-    def __str__(self) -> str:
-        return self.link
-
-
 class Banner(TimestampModel):
     link = models.URLField(
         verbose_name=_("Link"),
@@ -60,6 +33,33 @@ class Banner(TimestampModel):
         return self.link
 
 
+class Promotion(TimestampModel):
+    link = models.URLField(
+        verbose_name=_("Link"),
+        max_length=255,
+        db_index=True,
+        help_text=_("Link to Promotion.")
+    )
+    image = models.ImageField(
+        verbose_name=_("Image"),
+        upload_to="managements/promotion"
+    )
+    alt_image = models.CharField(
+        verbose_name=_("Alt image"),
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text=_("The text that represents the image.")
+    )
+
+    class Meta:
+        verbose_name = _("Promotion")
+        verbose_name_plural = _("Promotions")
+
+    def __str__(self) -> str:
+        return self.link
+
+
 class Home(TimestampModel):
     title = models.CharField(
         verbose_name=_("Title"),
@@ -70,17 +70,17 @@ class Home(TimestampModel):
         max_length=255,
     )
     most_acessed = models.BooleanField(
-        verbose_name=_('Most acessed'),
+        verbose_name=_("Most acessed"),
         default=True,
         help_text=_("Most acessed is active?")
     )
     most_sold = models.BooleanField(
-        verbose_name=_('Most sold'),
+        verbose_name=_("Most sold"),
         default=True,
         help_text=_("Most sold is active?")
     )
     most_favorite = models.BooleanField(
-        verbose_name=_('Most favorite'),
+        verbose_name=_("Most favorite"),
         default=True,
         help_text=_("Most favorite is active?")
     )

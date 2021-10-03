@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     # Rest Auth / All Auth
     'rest_auth',
     'allauth',
-    'allauth.account',
+    # 'allauth.account',
     'rest_auth.registration',
 
     # Aplications

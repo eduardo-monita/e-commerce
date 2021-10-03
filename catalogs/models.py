@@ -36,4 +36,4 @@ class Catalog(TimestampModel):
         verbose_name_plural = _("Catalogs")
 
     def __str__(self) -> str:
-        return self.title
+        return self.name
