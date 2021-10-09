@@ -1,12 +1,24 @@
-# from rest_framework import viewsets, status
-# from rest_framework.decorators import permission_classes
-# from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import viewsets, status
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 # from rest_framework.response import Response
+from about_us.api.serializers import CompanySerializer, ContactSerializer
+from about_us.models import Company, Contact
 
 
-# @permission_classes([IsAuthenticated])
-# class Example(viewsets.ModelViewSet):
-#     serializer_class = ExampleSerializer
+@permission_classes([IsAuthenticated])
+class CompanyView(viewsets.ModelViewSet):
+    serializer_class = CompanySerializer
+    http_method_names = ['get', 'head']
 
-#     def get_queryset(self):
-#         return Models.objects.all()
+    def get_queryset(self):
+        return Company.objects.filter(is_active=True)
+
+
+@permission_classes([IsAuthenticated])
+class ContactView(viewsets.ModelViewSet):
+    serializer_class = ContactSerializer
+    http_method_names = ['post']
+
+    def get_queryset(self):
+        return Contact.objects.filter(is_active=True)

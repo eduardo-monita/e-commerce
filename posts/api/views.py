@@ -5,7 +5,7 @@
 
 
 # @permission_classes([IsAuthenticated])
-# class Example(viewsets.ModelViewSet):
+# class ExampleView(viewsets.ModelViewSet):
 #     serializer_class = ExampleSerializer
 
 #     def get_queryset(self):
