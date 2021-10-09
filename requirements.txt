@@ -26,3 +26,6 @@ Pillow==8.3.2
 
 # Envs
 django-dotenv==1.4.2
+
+# Heroku
+django-heroku==0.0.0
