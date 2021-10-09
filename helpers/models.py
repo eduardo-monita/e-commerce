@@ -2,6 +2,11 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+class TimestampModelQueryset(models.QuerySet):
+    def actives(self):
+        return self.filter(is_active=True)
+
+
 class TimestampModel(models.Model):
     """
         Extend this model if you wish to have automatically updated
@@ -24,6 +29,9 @@ class TimestampModel(models.Model):
         default=True,
         help_text=_("This register is active? If set as no, will show in website!")
     )
+
+    # Manager
+    objects = TimestampModelQueryset.as_manager()
 
     def save(self, *args, **kwargs):
         if kwargs.get("update_fields"):
