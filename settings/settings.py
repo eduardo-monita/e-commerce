@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 import dotenv
+import django_heroku
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -260,3 +261,5 @@ LOGGING = {
 }
 
 CKEDITOR_UPLOAD_PATH = "ckeditor/"
+
+django_heroku.settings(locals())

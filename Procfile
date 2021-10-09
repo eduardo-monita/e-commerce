@@ -1,1 +1,1 @@
-web: setup.sh && python manage.py runserver
+web: docker-compose up -d && gunicorn settings.wsgi
