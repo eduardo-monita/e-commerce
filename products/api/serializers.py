@@ -6,4 +6,4 @@ from rest_framework import serializers
 
 #     class Meta:
 #         model = Model
-#         fields = ['id', 'name']
+#         fields = ["id", "name"]

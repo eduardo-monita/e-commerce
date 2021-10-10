@@ -94,7 +94,7 @@ class UserAdmin(BaseUserAdmin):
                 """
             )
         return mark_safe(
-            f"<a href='{reverse('admin: accounts_useraccessed_add', args=[])}'>Add a products a access</a>"
+            f"<a href='{reverse('admin:accounts_useraccessed_add', args=[])}'>Add a products a access</a>"
         )
     view_products_accessed.short_description = "Products Accessed Link"
 

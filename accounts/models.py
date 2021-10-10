@@ -200,13 +200,13 @@ class ProductCart(TimestampModel):
 
     def freight(self):
         """This function will return the total freight, the product freight multiple quantity"""
-        if self.product.freight:
+        if hasattr(self, 'product') and self.product and self.product.freight:
             return self.product.freight * self.quantity
         return 0
 
     def price(self):
         """This function will return the total price, the product price multiple quantity"""
-        if self.product.price:
+        if hasattr(self, 'product') and self.product and self.product.price:
             return self.product.price * self.quantity
         return 0
 
