@@ -1,4 +1,3 @@
-from django.db import models
 from rest_framework import serializers
 from rest_auth.serializers import LoginSerializer
 from rest_auth.registration.serializers import RegisterSerializer
@@ -12,7 +11,7 @@ from accounts.models import (
     UserAccessed,
     ProductUserAccessed
 )
-from products.models import Product
+from products.api.serializers import ProductListSerializer
 
 User = get_user_model()
 
@@ -42,20 +41,12 @@ class UserDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "email", "last_login"]
 
 
-class SimpleProductSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Product
-        fields = ["id", "name", "price", "freight", "image", "alt_image"]
-        read_only_fields = fields
-
-
 class ProductCartSerializer(serializers.ModelSerializer):
-    product = SimpleProductSerializer(many=False, read_only=True)
+    product = ProductListSerializer(many=False, read_only=True)
 
     class Meta:
         model = ProductCart
-        fields = ["id", "product", "quantity", "sum_freight", "sum_price"]
+        fields = ["id", "quantity", "sum_freight", "sum_price", "product"]
         read_only_fields = ["id", "product", "sum_freight", "sum_price"]
 
 
@@ -65,12 +56,12 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ["id", "user", "products_cart", "total_freight", "subtotal", "total"]
+        fields = ["id", "total_freight", "subtotal", "total", "user", "products_cart"]
         read_only_fields = fields
 
 
 class UserFavoriteSerializer(serializers.ModelSerializer):
-    products = SimpleProductSerializer(many=True, read_only=True)
+    products = ProductListSerializer(many=True, read_only=True)
 
     class Meta:
         model = UserFavorite
@@ -79,7 +70,7 @@ class UserFavoriteSerializer(serializers.ModelSerializer):
 
 
 class UserShoppedSerializer(serializers.ModelSerializer):
-    products = SimpleProductSerializer(many=True, read_only=True)
+    products = ProductListSerializer(many=True, read_only=True)
 
     class Meta:
         model = UserShopped
@@ -88,11 +79,11 @@ class UserShoppedSerializer(serializers.ModelSerializer):
 
 
 class ProductUserAccessedSerializer(serializers.ModelSerializer):
-    product = SimpleProductSerializer(many=False, read_only=True)
+    product = ProductListSerializer(many=False, read_only=True)
 
     class Meta:
         model = ProductUserAccessed
-        fields = ["id", "product", "hit"]
+        fields = ["id", "hit", "product"]
         read_only_fields = ["id", "product"]
 
 

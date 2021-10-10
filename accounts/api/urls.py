@@ -23,7 +23,7 @@ router = routers.SimpleRouter()
 router.register("cart", CartView, basename="user_cart")
 router.register("favorites", UserFavoriteView, basename="user_favorites")
 router.register("shopped", UserShoppedView, basename="user_shopped")
-router.register("accessed", UserAccessedView, basename="user_shopped")
+router.register("accessed", UserAccessedView, basename="user_accessed")
 
 """ ProductCart router """
 product_cart_router = nested_routers.NestedSimpleRouter(router, r'cart', lookup='cart')
