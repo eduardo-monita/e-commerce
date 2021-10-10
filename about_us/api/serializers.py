@@ -11,6 +11,7 @@ class CompanySerializer(serializers.ModelSerializer):
             "title", "description", "image", "alt_image", "description", "motivation", "principles", "address",
             "email", "phone", "cnpj"
         ]
+        read_only_fields = fields
 
 
 class ContactSerializer(serializers.ModelSerializer):

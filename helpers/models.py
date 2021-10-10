@@ -27,6 +27,7 @@ class TimestampModel(models.Model):
     is_active = models.BooleanField(
         verbose_name=_("Active"),
         default=True,
+        db_index=True,
         help_text=_("This register is active? If set as no, will show in website!")
     )
 

@@ -10,6 +10,7 @@ psycopg2-binary==2.9.1
 #Django Rest Framework
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.8.0
+drf-nested-routers==0.93.3
 
 #Django Rest Auth
 django-rest-auth==0.9.5

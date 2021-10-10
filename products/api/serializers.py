@@ -1,9 +1,15 @@
-from django.db.models.base import Model
 from rest_framework import serializers
+from products.models import (
+    Category,
+    Product,
+    Access,
+    Sale,
+    Characteristic
+)
 
 
-# class ExampleSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
 
-#     class Meta:
-#         model = Model
-#         fields = ["id", "name"]
+    class Meta:
+        model = Product
+        fields = ["id", "name"]
