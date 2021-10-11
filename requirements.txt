@@ -27,3 +27,6 @@ django-dotenv==1.4.2
 
 # Heroku
 django-heroku==0.0.0
+
+#localflavor
+django-localflavor==3.1

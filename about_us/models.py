@@ -1,7 +1,8 @@
 from django.db import models
 from helpers.models import TimestampModel
 from django.utils.translation import ugettext_lazy as _
-
+from localflavor.br.models import BRCNPJField
+from django.core.validators import RegexValidator
 
 # Create your models here.
 class Company(TimestampModel):
@@ -35,10 +36,13 @@ class Company(TimestampModel):
     )
     phone = models.CharField(
         verbose_name=_("Phone number"),
-        max_length=255
+        max_length=255,
+        help_text=_("Format example: (99) 99999-9999"),
+        validators = [RegexValidator(regex="\(\d{2,}\) \d{4,}\-\d{4}", message="Invalid phone number", code="invalid_phone")]
     )
-    cnpj = models.CharField(
+    cnpj = BRCNPJField(
         verbose_name=_("CNPJ"),
+        help_text=_("Format example: 99.999.999/9999-99"),
         unique=True,
         db_index=True,
         max_length=255
