@@ -1,13 +1,14 @@
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as dj_filters
-from rest_framework import viewsets
-from rest_framework import filters
+from rest_framework import viewsets, status, filters
 from rest_framework.decorators import permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
-from accounts.models import Cart, ProductCart
-from products.models import Product, Category
+from rest_framework.response import Response
+from accounts.api.serializers import CartSerializer, UserFavoriteSerializer
+from accounts.models import Cart, ProductCart, UserAccessed, UserFavorite, UserShopped
+from products.models import Access, Product, Category, Sale
 from products.api.serializers import (
     CategorySerializer,
     ProductListSerializer,
@@ -48,7 +49,7 @@ class ProductView(viewsets.ModelViewSet):
         "list": ProductListSerializer,
         "retrieve": ProductDetailSerializer,
     }
-    http_method_names = ["get", "head"]
+    http_method_names = ["get", "head", "post"]
 
     def get_queryset(self):
         return Product.objects.actives().annotate(Count("user_favorite"))
@@ -56,36 +57,60 @@ class ProductView(viewsets.ModelViewSet):
     def get_serializer_class(self):
         return self.serializers.get(self.action, self.serializers.get("default"))
 
-    # @action(detail=True, methods=['POST'])
-    # def add_to_cart(self, request, *args, **kwargs):
-    #     product = get_object_or_404(Product, id=kwargs.get('pk'))
-    #     cart = Cart.objects.actives().get_or_create(user=request.user)
-    #     product_cart = ProductCart.objects.actives().get_or_create(cart=cart)
-
-    #     # serializer = (instance=budget, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-
-    #     budget = self.get_object()
-    #     response_serializer = serializers.BudgetCSEditSerializer(budget, context=self.get_serializer_context())
-    #     pass
-
-    @action(detail=True, methods=['POST'])
-    def remove_from_cart(self, request, *args, **kwargs):
+    @action(detail=True, methods=['post'])
+    def add_to_cart(self, request, *args, **kwargs):
         product = get_object_or_404(Product, id=kwargs.get('pk'))
-        pass
+        cart = get_object_or_404(Cart, user=request.user)
+        product_cart = ProductCart.objects.actives().get_or_create(cart=cart, product=product)[0]
+        product_cart.quantity += 1
+        product_cart.save(update_fields=["quantity"])
+        response_serializer = CartSerializer(Cart.objects.actives().get(user=request.user), many=False)
+        return Response(data=response_serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['post'])
+    def remove_from_cart(self, request, *args, **kwargs):
+        product_cart = get_object_or_404(ProductCart, cart__user=request.user, product=kwargs.get('pk'))
+        product_cart.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['POST'])
     def add_to_favorites(self, request, *args, **kwargs):
         product = get_object_or_404(Product, id=kwargs.get('pk'))
-        pass
+        user_favorite = UserFavorite.objects.actives().get_or_create(user=request.user)[0]
+        if not user_favorite.products.actives().filter(id=product.id).exists():
+            user_favorite.products.add(product)
+        response_serializer = UserFavoriteSerializer(user_favorite, many=False)
+        return Response(data=response_serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['POST'])
+    def remove_from_favorites(self, request, *args, **kwargs):
+        product = get_object_or_404(Product, id=kwargs.get('pk'))
+        user_favorite = get_object_or_404(UserFavorite, user=request.user, products=product.id)
+        user_favorite.products.remove(product)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['POST'])
     def hit_access(self, request, *args, **kwargs):
         product = get_object_or_404(Product, id=kwargs.get('pk'))
-        pass
+        access = Access.objects.actives().get_or_create(product=product)[0]
+        access.hit += 1
+        access.save(update_fields=["hit"])
+        if request.user:
+            user_accessed = UserAccessed.objects.actives().get_or_create(user=request.user)[0]
+            if not user_accessed.products.actives().filter(id=product.id).exists():
+                user_accessed.products.add(product)
+        response_serializer = ProductListSerializer(product, many=False)
+        return Response(data=response_serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['POST'])
     def hit_sale(self, request, *args, **kwargs):
         product = get_object_or_404(Product, id=kwargs.get('pk'))
-        pass
+        sale = Sale.objects.actives().get_or_create(product=product)[0]
+        sale.hit += 1
+        sale.save(update_fields=["hit"])
+        if request.user:
+            user_shopped = UserShopped.objects.actives().get_or_create(user=request.user)[0]
+            if not user_shopped.products.actives().filter(id=product.id).exists():
+                user_shopped.products.add(product)
+        response_serializer = ProductListSerializer(product, many=False)
+        return Response(data=response_serializer.data, status=status.HTTP_201_CREATED)

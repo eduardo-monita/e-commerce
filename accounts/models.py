@@ -221,7 +221,8 @@ class UserFavorite(TimestampModel):
     products = models.ManyToManyField(
         verbose_name=_("Products"),
         to=Product,
-        related_name="user_favorite"
+        related_name="user_favorite",
+        blank=True
     )
 
     class Meta:
@@ -242,7 +243,8 @@ class UserShopped(TimestampModel):
     products = models.ManyToManyField(
         verbose_name=_("Products"),
         to=Product,
-        related_name="user_shopped"
+        related_name="user_shopped",
+        blank=True
     )
 
     class Meta:
@@ -264,7 +266,8 @@ class UserAccessed(TimestampModel):
         verbose_name=_("Products"),
         to=Product,
         through="ProductUserAccessed",
-        related_name="user_accessed"
+        related_name="user_accessed",
+        blank=True
     )
 
     class Meta:
