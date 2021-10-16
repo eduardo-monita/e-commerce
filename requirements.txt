@@ -4,6 +4,10 @@ Django==3.2.7
 # Guicorn
 gunicorn==20.1.0
 
+pytz==2018.9
+whitenoise==4.1.2
+dj-database-url==0.5.0
+
 # Database Postgres
 psycopg2-binary==2.9.1
 
@@ -26,4 +30,4 @@ Pillow==8.3.2
 django-dotenv==1.4.2
 
 # Heroku
-django-heroku==0.0.0
+django-heroku==0.3.1
