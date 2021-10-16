@@ -16,7 +16,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / "subdir".
 BASE_DIR = Path(__file__).resolve().parent.parent
-dotenv.read_dotenv(os.path.join(BASE_DIR, ".env"))
+# dotenv.read_dotenv(os.path.join(BASE_DIR, ".env"))
 DATA_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -109,7 +109,7 @@ AUTH_USER_MODEL = "accounts.User"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DATABASE_NAME", "e-commerce"),
+        "NAME": os.environ.get("DATABASE_NAME", "e-commerce-prd"),
         "USER": os.environ.get("DATABASE_USER", "postgres"),
         "PASSWORD": os.environ.get("DATABASE_PASSWORD", "postgres"),
         "HOST": os.environ.get("DATABASE_HOST", "localhost"),
@@ -117,6 +117,7 @@ DATABASES = {
     }
 }
 
+print(DATABASES)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

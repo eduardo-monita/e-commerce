@@ -1,1 +1,1 @@
-web: docker-compose up -d && gunicorn settings.wsgi
+web: gunicorn settings.wsgi
