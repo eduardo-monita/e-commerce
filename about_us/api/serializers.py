@@ -9,7 +9,7 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = [
             "title", "description", "image", "alt_image", "description", "motivation", "principles", "address",
-            "email", "phone", "cnpj"
+            "email", "phone", "cnpj", "origin_zip_code"
         ]
         read_only_fields = fields
 

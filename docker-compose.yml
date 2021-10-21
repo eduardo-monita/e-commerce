@@ -10,7 +10,7 @@ services:
       timeout: 5s
       retries: 12
     volumes:
-      - "./docker/db/dev/pgdata:/var/lib/postgresql/data"
+      - "./docker/db/pgdata:/var/lib/postgresql/data"
     environment:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "e-commerce"

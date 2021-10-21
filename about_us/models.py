@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from localflavor.br.models import BRCNPJField
 from django.core.validators import RegexValidator
 
+
 # Create your models here.
 class Company(TimestampModel):
     title = models.CharField(
@@ -37,8 +38,10 @@ class Company(TimestampModel):
     phone = models.CharField(
         verbose_name=_("Phone number"),
         max_length=255,
-        help_text=_("Format example: (99) 99999-9999"),
-        validators = [RegexValidator(regex="\(\d{2,}\) \d{4,}\-\d{4}", message="Invalid phone number", code="invalid_phone")]
+        help_text=_("Format example: (999) 99999-9999, (99) 9999-9999"),
+        validators=[
+            RegexValidator(regex="^\(\d{2,3}\) \d{4,5}\-\d{4}$", message="Invalid phone number", code="invalid_phone")
+        ]
     )
     cnpj = BRCNPJField(
         verbose_name=_("CNPJ"),
@@ -46,6 +49,14 @@ class Company(TimestampModel):
         unique=True,
         db_index=True,
         max_length=255
+    )
+    origin_zip_code = models.CharField(
+        verbose_name=_("Origin zip code"),
+        max_length=9,
+        help_text=_("Format example: 99999-999"),
+        validators=[
+            RegexValidator(regex="^\d{5}\-\d{3}$", message="Invalid origin zip code", code="invalid_origin_zip_code")
+        ]
     )
     motivation = models.TextField(
         verbose_name=_("Motivation"),

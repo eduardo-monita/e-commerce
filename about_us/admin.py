@@ -15,7 +15,7 @@ class CompanyAdmin(admin.ModelAdmin):
             "fields": ["title", "image", "alt_image", "description", "motivation", "principles"]
         }],
         ["Contact", {
-            "fields": ["address", "email", "phone", "cnpj"]
+            "fields": ["address", "origin_zip_code", "email", "phone", "cnpj"]
         }],
         ["Register data", {
             "classes": ["collapse"],
