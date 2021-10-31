@@ -1,5 +1,6 @@
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
 from django_filters import rest_framework as dj_filters
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import permission_classes, action
@@ -14,6 +15,7 @@ from products.api.serializers import (
     ProductListSerializer,
     ProductDetailSerializer
 )
+from helpers.calculate_freight import calculate_feight
 
 
 @permission_classes([IsAuthenticated])
@@ -114,3 +116,24 @@ class ProductView(viewsets.ModelViewSet):
                 user_shopped.products.add(product)
         response_serializer = ProductListSerializer(product, many=False)
         return Response(data=response_serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['GET'])
+    def calculate_freight(self, request, *args, **kwargs):
+        product = get_object_or_404(Product, id=kwargs.get('pk'))
+        if request.query_params.get("zip_code"):
+            response_calc = calculate_feight(product, request.query_params.get("zip_code"))
+            if response_calc is None:
+                return Response(data={"error": _("Product unavaiable to this zip code")}, status=status.HTTP_200_OK)
+            if response_calc[0].get("error"):
+                return Response(data=response_calc, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(data=response_calc, status=status.HTTP_200_OK)
+        return Response(data={"error": _("Zip code not informed!")}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@permission_classes([IsAuthenticated])
+class ProductCartView(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    http_method_names = ["get", "head", "patch", "options"]
+
+    def get_queryset(self):
+        return ProductCart.objects.actives()

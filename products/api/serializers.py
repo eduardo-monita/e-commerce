@@ -29,7 +29,7 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            "id", "name", "description", "price", "freight", "image", "alt_image", "access", "sale", "characteristics",
+            "id", "name", "description", "price", "image", "alt_image", "access", "sale", "characteristics",
             "categories"
         ]
         read_only_fields = fields
@@ -41,5 +41,5 @@ class ProductListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "price", "freight", "image", "alt_image", "access", "sale"]
+        fields = ["id", "name", "price", "image", "alt_image", "access", "sale"]
         read_only_fields = fields

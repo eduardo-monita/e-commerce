@@ -48,10 +48,12 @@ class Client(object):
         )
 
     def call_web_service(self, method_name, package, destination_zip_code, service):
+        print("entrei call web service")
         args = self.build_web_service_call_args(package, destination_zip_code, service)
+        print(args)
         result = getattr(self.ws_client.service, method_name)(*args)
         print(result)
-        return [Service.create_from_suds_object(result.Servicos[0][i]) for i in range(len(result.Servicos[0]))]
+        return [Service.create_from_suds_object(result.Servicos[0][i]) for i in range(len(result.Servicos[0]))][0]
 
     # calc_preco_data = web_service_call('CalcPrecoData')
 

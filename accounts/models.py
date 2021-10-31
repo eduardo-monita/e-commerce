@@ -6,6 +6,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.core.validators import RegexValidator
 
 from accounts.managers import UserManager
 from helpers.models import TimestampModel
@@ -34,10 +35,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_index=True
     )
     phone = models.CharField(
-        verbose_name=_("Phone"),
-        max_length=50,
-        blank=True,
-        null=True
+        verbose_name=_("Phone number"),
+        max_length=255,
+        help_text=_("Format example: (999) 99999-9999, (99) 9999-9999"),
+        validators=[
+            RegexValidator(regex="^\(\d{2,3}\) \d{4,5}\-\d{4}$", message="Invalid phone number", code="invalid_phone")
+        ]
     )
     date_of_birth = models.DateField(
         verbose_name=_("Date of birth"),
@@ -128,6 +131,14 @@ class Cart(TimestampModel):
         through="ProductCart",
         related_name="cart"
     )
+    destination_zip_code = models.CharField(
+        verbose_name=_("Origin zip code"),
+        max_length=9,
+        help_text=_("Format example: 99999-999"),
+        validators=[
+            RegexValidator(regex="^\d{5}\-\d{3}$", message="Invalid origin zip code", code="invalid_origin_zip_code")
+        ]
+    )
 
     class Meta:
         verbose_name = _("Cart")
@@ -143,7 +154,7 @@ class Cart(TimestampModel):
         """This function will return total freight"""
         freight = 0
         for product_cart in self.products_cart.all():
-            freight += product_cart.freight()
+            freight += product_cart.calc_freight()
         return f"{round(freight, 2):.2f}"
 
     @property
@@ -161,7 +172,7 @@ class Cart(TimestampModel):
         freight = 0
         for product_cart in self.products_cart.all():
             subtotal += product_cart.price()
-            freight += product_cart.freight()
+            freight += product_cart.calc_freight()
         return f"{round(subtotal + freight, 2):.2f}"
 
 
@@ -182,6 +193,14 @@ class ProductCart(TimestampModel):
         verbose_name=_("Quantity"),
         default=0,
     )
+    freight = models.DecimalField(
+        verbose_name=_("Freight"),
+        max_digits=9,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        help_text=_("Cost of freight.")
+    )
 
     class Meta:
         verbose_name = _("Product Cart")
@@ -192,16 +211,16 @@ class ProductCart(TimestampModel):
 
     @property
     def sum_freight(self):
-        return f"{round(self.freight(), 2):.2f}"
+        return f"{round(self.calc_freight(), 2):.2f}"
 
     @property
     def sum_price(self):
         return f"{round(self.price(), 2):.2f}"
 
-    def freight(self):
+    def calc_freight(self):
         """This function will return the total freight, the product freight multiple quantity"""
-        if hasattr(self, 'product') and self.product and self.product.freight:
-            return self.product.freight * self.quantity
+        if self.freight and self.quantity:
+            return self.freight * self.quantity
         return 0
 
     def price(self):

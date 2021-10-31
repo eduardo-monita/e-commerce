@@ -103,7 +103,7 @@ class ProductCartInline(admin.TabularInline):
     model = ProductCart
     readonly_fields = ["sum_freight", "sum_price"]
     autocomplete_fields = ["product"]
-    fields = ["product", "quantity", "sum_freight", "sum_price"]
+    fields = ["product", "quantity", "freight", "sum_freight", "sum_price"]
     extra = 0
 
 
@@ -115,7 +115,7 @@ class CartAdmin(admin.ModelAdmin):
     readonly_fields = ["total_freight", "subtotal", "total", "created_at", "updated_at"]
     fieldsets = [
         [None, {
-            "fields": ["user", "total_freight", "subtotal", "total"]
+            "fields": ["user", "destination_zip_code", "total_freight", "subtotal", "total"]
         }],
         ["Register data", {
             "classes": ["collapse"],

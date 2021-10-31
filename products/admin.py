@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.html import mark_safe
 from products.models import (
     Category,
+    Package,
     Product,
     Access,
     Sale,
@@ -37,6 +38,12 @@ class CharacteristicInline(admin.StackedInline):
     extra = 0
 
 
+class PackageInline(admin.StackedInline):
+    model = Package
+    fields = ["format", "weight", "length", "width", "height"]
+    extra = 0
+
+
 @ admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ["name", "price", "created_at", "updated_at", "is_active"]
@@ -46,7 +53,7 @@ class ProductAdmin(admin.ModelAdmin):
     filter_horizontal = ["categories"]
     fieldsets = [
         [None, {
-            "fields": ["name", "description", "price", "freight", "image", "alt_image", "categories"]
+            "fields": ["name", "description", "price", "image", "alt_image", "categories"]
         }],
         ["Data", {
             "classes": ["collapse"],
@@ -55,12 +62,12 @@ class ProductAdmin(admin.ModelAdmin):
         ["Register data", {
             "classes": ["collapse"],
             "fields": ["is_active", "created_at", "updated_at"]
-        }]
+        }],
     ]
     search_fields = ["name"]
     list_per_page = 12
     ordering = ["name"]
-    inlines = [CharacteristicInline]
+    inlines = [CharacteristicInline, PackageInline]
 
     def count_access(self, instance):
         if hasattr(instance, "access") and instance.access:

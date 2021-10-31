@@ -1,8 +1,8 @@
 from django.db import models
-from helpers.models import TimestampModel
-from django.utils.translation import ugettext_lazy as _
-from localflavor.br.models import BRCNPJField
 from django.core.validators import RegexValidator
+from django.utils.translation import ugettext_lazy as _
+from helpers.models import TimestampModel
+from localflavor.br.models import BRCNPJField
 
 
 # Create your models here.

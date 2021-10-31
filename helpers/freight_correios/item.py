@@ -8,8 +8,8 @@ class Item(object):
 
     def __add__(self, other):
         return Item(
-            weight=self.weight + other.weight,
-            height=self.height + other.height,
+            weight=self.weight + float(other.weight),
+            height=self.height + float(other.height),
             width=max(self.width, other.width),
             length=max(self.length, other.length)
         )

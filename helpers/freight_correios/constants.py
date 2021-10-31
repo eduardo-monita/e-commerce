@@ -1,8 +1,11 @@
+from django.utils.translation import ugettext_lazy as _
+
 WSDL_URL = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL'
 
 PACKAGE_OR_BOX = 1
 PRISM_ROLL = 2
 ENVELOPE = 3
+
 
 SEDEX = '40010'  # Use this
 SEDEX_CHARGE = '40045'
@@ -24,3 +27,9 @@ E_SEDEX_EXPRESS = '81035'
 GRUP_1_E_SEDEX = '81868'
 GRUP_2_E_SEDEX = '81833'
 GRUP_3_E_SEDEX = '81850'
+
+USABLE_SERVICES = [
+    (PAC, _("PAC")),
+    (SEDEX, _("SEDEX")),
+    (SEDEX_10, _("SEDEX 10"))
+]
