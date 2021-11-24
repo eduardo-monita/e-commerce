@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
-from rest_framework.decorators import action, permission_classes
-from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
+from rest_framework.decorators import permission_classes
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.api.serializers import (
@@ -10,7 +10,8 @@ from accounts.api.serializers import (
     UserDetailSerializer,
     ProductCartSerializer,
     UserFavoriteSerializer,
-    UserShoppedSerializer
+    UserShoppedSerializer,
+    UserAddressesSerializer
 )
 from accounts.models import (
     Cart,
@@ -18,7 +19,7 @@ from accounts.models import (
     UserFavorite,
     UserShopped,
     UserAccessed,
-    ProductUserAccessed
+    UserAddresses
 )
 
 User = get_user_model()
@@ -76,3 +77,12 @@ class UserAccessedView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return UserAccessed.objects.actives().filter(user=self.request.user)
+
+
+@permission_classes([IsAuthenticated])
+class UserAddressesView(viewsets.ModelViewSet):
+    serializer_class = UserAddressesSerializer
+    http_method_names = ["get", "head", "post", "patch", "options", "delete"]
+
+    def get_queryset(self):
+        return UserAddresses.objects.actives().filter(user=self.request.user)

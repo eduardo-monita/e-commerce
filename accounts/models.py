@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
 
 from accounts.managers import UserManager
+from accounts.constants import STATE_CHOICES
 from helpers.models import TimestampModel
 from products.models import Product
 
@@ -130,14 +131,6 @@ class Cart(TimestampModel):
         to=Product,
         through="ProductCart",
         related_name="cart"
-    )
-    destination_zip_code = models.CharField(
-        verbose_name=_("Origin zip code"),
-        max_length=9,
-        help_text=_("Format example: 99999-999"),
-        validators=[
-            RegexValidator(regex="^\d{5}\-\d{3}$", message="Invalid origin zip code", code="invalid_origin_zip_code")
-        ]
     )
 
     class Meta:
@@ -299,7 +292,91 @@ class UserAccessed(TimestampModel):
         return f"{self.user.email}"
 
 
-class ProductUserAccessed(models.Model):
+class UserAddresses(TimestampModel):
+    user = models.ForeignKey(
+        verbose_name=_("User"),
+        to=User,
+        related_name=_("addresses"),
+        on_delete=models.CASCADE
+    )
+    identification = models.CharField(
+        verbose_name=_("Identification"),
+        max_length=255
+    )
+    zip_code = models.CharField(
+        verbose_name=_("Zip code"),
+        max_length=9,
+        help_text=_("Format example: 99999-999"),
+        validators=[
+            RegexValidator(regex="^\d{5}\-\d{3}$", message="Invalid origin zip code", code="invalid_zip_code")
+        ]
+    )
+    recipient = models.CharField(
+        verbose_name=_("Recipient"),
+        max_length=255
+    )
+    phone = models.CharField(
+        verbose_name=_("Phone number"),
+        max_length=255,
+        help_text=_("Format example: (999) 99999-9999, (99) 9999-9999"),
+        validators=[
+            RegexValidator(regex="^\(\d{2,3}\) \d{4,5}\-\d{4}$", message="Invalid phone number", code="invalid_phone")
+        ]
+    )
+    address = models.CharField(
+        verbose_name=_("Address"),
+        max_length=560
+    )
+    number = models.IntegerField(
+        verbose_name=_("Number")
+    )
+    complement = models.CharField(
+        verbose_name=_("Complement"),
+        max_length=255,
+        blank=True,
+        null=True
+    )
+    reference = models.CharField(
+        verbose_name=_("Reference"),
+        max_length=560,
+        blank=True,
+        null=True
+    )
+    neighborhood = models.CharField(
+        verbose_name=_("Neighborhood"),
+        max_length=255
+    )
+    city = models.CharField(
+        verbose_name=_("City"),
+        max_length=255
+    )
+    state = models.CharField(
+        verbose_name=_("State"),
+        max_length=2,
+        choices=STATE_CHOICES
+    )
+    is_default = models.BooleanField(
+        verbose_name=_("Default"),
+        default=False,
+        help_text=_("Is the default address?")
+    )
+
+    def save(self, *args, **kwargs):
+        response = super(UserAddresses, self).save(*args, **kwargs)
+        default_address = UserAddresses.objects.actives().filter(user=self.user).exclude(id=self.id)
+        if self.is_default and default_address.exists():
+            default_address.update(is_default=False)
+        return response
+
+    class Meta:
+        verbose_name = _("User Addresses")
+        verbose_name_plural = _("Users Addresses")
+
+    def __str__(self) -> str:
+        return f"{self.identification}"
+
+
+class ProductUserAccessed(TimestampModel):
     user_accessed = models.ForeignKey(
         verbose_name=_("Cart"),
         to=UserAccessed,

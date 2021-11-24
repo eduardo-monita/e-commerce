@@ -9,6 +9,7 @@ from accounts.models import (
     UserFavorite,
     UserShopped,
     UserAccessed,
+    UserAddresses,
     ProductUserAccessed
 )
 from products.api.serializers import ProductListSerializer
@@ -94,3 +95,14 @@ class UserAccessedSerializer(serializers.ModelSerializer):
         model = UserAccessed
         fields = ["id", "user_accessed_product"]
         read_only_fields = fields
+
+
+class UserAddressesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserAddresses
+        fields = [
+            "id", "user", "identification", "zip_code", "recipient", "phone", "address", "number", "complement",
+            "reference", "neighborhood", "city", "state", "is_default"
+        ]
+        read_only_fields = ["id"]

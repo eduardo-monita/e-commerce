@@ -15,7 +15,8 @@ from accounts.api.views import (
     ProductCartView,
     UserFavoriteView,
     UserShoppedView,
-    UserAccessedView
+    UserAccessedView,
+    UserAddressesView
 )
 
 """ Main router """
@@ -24,6 +25,7 @@ router.register("cart", CartView, basename="user_cart")
 router.register("favorites", UserFavoriteView, basename="user_favorites")
 router.register("shopped", UserShoppedView, basename="user_shopped")
 router.register("accessed", UserAccessedView, basename="user_accessed")
+router.register("addresses", UserAddressesView, basename="user_addresses")
 
 """ ProductCart router """
 product_cart_router = nested_routers.NestedSimpleRouter(router, r'cart', lookup='cart')

@@ -10,6 +10,7 @@ from accounts.models import (
     UserFavorite,
     UserShopped,
     UserAccessed,
+    UserAddresses,
     ProductUserAccessed
 )
 User = get_user_model()
@@ -115,7 +116,7 @@ class CartAdmin(admin.ModelAdmin):
     readonly_fields = ["total_freight", "subtotal", "total", "created_at", "updated_at"]
     fieldsets = [
         [None, {
-            "fields": ["user", "destination_zip_code", "total_freight", "subtotal", "total"]
+            "fields": ["user", "total_freight", "subtotal", "total"]
         }],
         ["Register data", {
             "classes": ["collapse"],
@@ -161,3 +162,26 @@ class UserAccessedAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(UserAddresses)
+class UserAddressesAdmin(admin.ModelAdmin):
+    list_display = ["user", "identification", "zip_code", "is_default", "created_at", "updated_at", "is_active"]
+    list_display_links = ["user"]
+    list_filter = ["is_default", "is_active"]
+    readonly_fields = ["created_at", "updated_at"]
+    fieldsets = [
+        [None, {
+            "fields": [
+                "user", "identification", "zip_code", "recipient", "phone", "address", "number", "complement",
+                "reference", "neighborhood", "city", "state", "is_default"
+            ]
+        }],
+        ["Register data", {
+            "classes": ["collapse"],
+            "fields": ["is_active", "created_at", "updated_at"]
+        }]
+    ]
+    search_fields = ["user", "identification", "zip_code"]
+    list_per_page = 12
+    ordering = ["user", "identification"]
