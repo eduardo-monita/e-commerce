@@ -228,7 +228,7 @@ class Package(TimestampModel):
             if self.width < 11 or self.width > 60:
                 error["width"] = _("Width not compatible with limits!")
 
-        if error is not {}:
+        if not error == {}:
             raise ValidationError(error)
 
     def __str__(self) -> str:

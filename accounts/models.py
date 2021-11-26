@@ -168,6 +168,15 @@ class Cart(TimestampModel):
             freight += product_cart.calc_freight()
         return f"{round(subtotal + freight, 2):.2f}"
 
+    def int_total(self):
+        """This function will return the subtotal plus freight value."""
+        subtotal = 0
+        freight = 0
+        for product_cart in self.products_cart.all():
+            subtotal += product_cart.price()
+            freight += product_cart.calc_freight()
+        return round(subtotal + freight, 2)
+
 
 class ProductCart(TimestampModel):
     product = models.ForeignKey(

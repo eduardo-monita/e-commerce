@@ -23,9 +23,9 @@ django-ckeditor==6.1.0
 django-dotenv==1.4.2
 
 # Heroku
-django-heroku==0.3.1
+django-on-heroku==1.1.2
 
-#localflavor
+# Localflavor
 django-localflavor==3.1
 
 # Correios
@@ -36,3 +36,9 @@ suds-py3==1.4.4.1
 Pillow==8.3.2
 six==1.16.0
 pytz==2018.9
+
+# Payment
+stripe==2.63.0
+
+# Swagger
+drf-yasg==1.20.0

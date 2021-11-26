@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
 
+    # Swagger
+    'drf_yasg',
+
     # Django helpers
     "django_filters",
 
@@ -85,7 +88,7 @@ ROOT_URLCONF = "settings.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -218,6 +221,9 @@ SILENCED_SYSTEM_CHECKS = ["security.W019"]
 # Rest Framework
 # REST_FRAMEWORK = {
 # }
+
+# Stripe
+STRIPE_SECRET_KEY = "sk_test_51Jzhs2GmSz11SzxVHdg0vXuekpPWUbVMHtpdeGl5vsTABVM30HTywklrsUCuAoXiBhO87FpVD0KZe2HXzJ3sRak900aFtj5IRp"
 
 # Log
 LOGGING = {
